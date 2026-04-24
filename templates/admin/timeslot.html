@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Time Slots</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body onload="loadSlots()">
+
+<header>
+<h1>Admin Panel</h1>
+<nav>
+<a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+<a href="{{ url_for('admin_slots') }}">Time Slots</a>
+</nav>
+</header>
+
+<div class="container">
+<h2>Manage Time Slots</h2>
+
+<input type="time" id="slotTime">
+<button class="btn" onclick="addSlot()">Block Slot</button>
+
+<table id="slotList">
+<tr>
+<th>Blocked Time</th>
+</tr>
+</table>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

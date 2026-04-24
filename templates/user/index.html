@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Home</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<header>
+<h1>Restaurant</h1>
+<nav>
+<a href="{{ url_for('home') }}">Home</a>
+<a href="{{ url_for('booking') }}">Book</a>
+<a href="{{ url_for('mybooking') }}">My Bookings</a>
+<a href="{{ url_for('login') }}">Login</a>
+<a href="{{ url_for('admin') }}">Admin</a>
+
+<!-- ✅ LOGOUT BUTTON -->
+<a href="#" onclick="logout()">Logout</a>
+</nav>
+</header>
+
+<div class="container">
+<h2>Welcome to Our Restaurant</h2>
+<p>Book your table easily online</p>
+<br>
+<a href="{{ url_for('booking') }}" class="btn">Book Now</a>
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

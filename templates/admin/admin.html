@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body onload="loadDashboard()">
+
+<header>
+<h1>Admin Panel</h1>
+<nav>
+<a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+<a href="{{ url_for('admin_bookings') }}">Bookings</a>
+<a href="{{ url_for('admin_tables') }}">Tables</a>
+<a href="{{ url_for('admin_reports') }}">Reports</a>
+<a href="{{ url_for('admin_settings') }}">Settings</a>
+<a href="{{ url_for('admin_slots') }}">Time Slots</a>
+
+<!-- ✅ ADMIN LOGOUT -->
+<a href="#" onclick="logout()">Logout</a>
+</nav>
+</header>
+
+<div class="container">
+<h2>Dashboard</h2>
+
+<div style="display:flex; gap:20px;">
+<div class="form-box">
+<h3>Total Bookings</h3>
+<p id="totalBookings">0</p>
+</div>
+
+<div class="form-box">
+<h3>Today Bookings</h3>
+<p id="todayBookings">0</p>
+</div>
+</div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

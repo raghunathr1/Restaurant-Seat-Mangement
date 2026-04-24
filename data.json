@@ -1,0 +1,23 @@
+{
+    "users": [
+        {
+            "name": "raghunath",
+            "email": "RAGHU@GMAIL.COM",
+            "password": "123"
+        }
+    ],
+    "bookings": [
+        {
+            "name": "raghunath",
+            "date": "2026-03-31",
+            "time": "14:33",
+            "people": "2"
+        },
+        {
+            "name": "raghunath",
+            "date": "2026-03-31",
+            "time": "14:33",
+            "people": "2"
+        }
+    ]
+}

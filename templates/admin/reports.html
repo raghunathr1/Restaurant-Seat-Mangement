@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Reports</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body onload="loadReports()">
+
+<header>
+<h1>Admin Panel</h1>
+<nav>
+<a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+<a href="{{ url_for('admin_reports') }}">Reports</a>
+</nav>
+</header>
+
+<div class="container">
+<h2>Reports</h2>
+
+<p>Total Bookings: <span id="total"></span></p>
+<p>Today: <span id="today"></span></p>
+<p>Peak Time: <span id="peak"></span></p>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
