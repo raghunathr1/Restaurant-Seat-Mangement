@@ -4,27 +4,34 @@
 <title>Booking</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
 
 <header>
-<h1>Restaurant</h1>
+<h1>Restaurant Booking</h1>
 </header>
 
 <div class="form-box">
+
 <h2>Book Table</h2>
 
 <input type="date" id="date">
 <input type="time" id="time">
 <input type="number" id="people" placeholder="Number of People">
 
-<button class="btn" onclick="checkAvailability()">Check Availability</button>
+<button class="btn" onclick="checkAvailability()">
+Check Availability
+</button>
 
 <p id="msg"></p>
 
-<button class="btn" onclick="bookTable()">Confirm Booking</button>
+<button class="btn" onclick="bookTable()">
+Confirm Booking
+</button>
 
 </div>
 
 <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
 </body>
 </html>

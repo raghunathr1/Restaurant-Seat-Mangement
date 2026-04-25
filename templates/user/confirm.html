@@ -1,17 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Success</title>
+<title>Booking Confirmed</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
 
+<header>
+<h1>Booking Success</h1>
+</header>
+
 <div class="success">
-<h2>Booking Confirmed ✅</h2>
-<p>Your table has been booked successfully.</p>
-<a href="{{ url_for('home') }}" class="btn">Go Home</a>
+
+<h2>🎉 Booking Confirmed</h2>
+
+<p id="info"></p>
+
+<br>
+
+<a href="/home" class="btn">Go Home</a>
+
 </div>
 
-<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script>
+let data = JSON.parse(localStorage.getItem("bookingInfo"));
+
+document.getElementById("info").innerHTML =
+"Table ID: " + data.table_id + "<br>" +
+"Seats: " + data.seats + "<br>" +
+"Status: Confirmed ✔";
+</script>
+
 </body>
 </html>

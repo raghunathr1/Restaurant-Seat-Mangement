@@ -1,61 +1,124 @@
 const API = "http://127.0.0.1:5000/api";
 
+let availabilityOK = false;
+
+//
 // =======================
-// COMMON FETCH
+// COMMON API FUNCTION
 // =======================
-async function apiRequest(url, method = "GET", body = null){
-    let res = await fetch(url, {
-        method,
-        headers: {"Content-Type": "application/json"},
-        body: body ? JSON.stringify(body) : null
-    });
-    return await res.json();
+async function apiRequest(url, method="GET", body=null){
+    try{
+        let res = await fetch(url,{
+            method,
+            headers:{"Content-Type":"application/json"},
+            body: body ? JSON.stringify(body) : null
+        });
+
+        return await res.json();
+    } catch(e){
+        console.log(e);
+        return {msg:"Server error"};
+    }
 }
 
+//
+// =======================
+// NAVIGATION
+// =======================
+function go(path){
+    window.location.href = path;
+}
+
+//
 // =======================
 // SIGNUP
 // =======================
 async function signup(){
-    let name = document.getElementById("name").value;
-    let email = document.getElementById("email").value;
-    let pass = document.getElementById("pass").value;
 
-    let data = await apiRequest(`${API}/signup`, "POST", {name, email, password: pass});
+    let data = await apiRequest(`${API}/signup`,"POST",{
+        name:document.getElementById("name").value,
+        email:document.getElementById("email").value,
+        password:document.getElementById("pass").value
+    });
+
     alert(data.msg);
-    if(data.msg === "Signup successful") window.location.href="/login";
+
+    if(data.msg === "Signup successful"){
+        window.location.href="/login";
+    }
 }
 
+//
 // =======================
-// LOGIN
+// LOGIN USER
 // =======================
 async function login(){
-    let email = document.getElementById("loginEmail").value;
-    let pass = document.getElementById("loginPass").value;
 
-    let data = await apiRequest(`${API}/login`, "POST", {email, password: pass});
+    let data = await apiRequest(`${API}/login`,"POST",{
+        email:document.getElementById("loginEmail").value,
+        password:document.getElementById("loginPass").value
+    });
 
     if(data.user){
         localStorage.setItem("currentUser", JSON.stringify(data.user));
-        alert("Login Success");
-        window.location.href="/";
+        window.location.href="/home";
     } else {
         alert(data.msg);
     }
 }
 
+//
 // =======================
-// LOGOUT (USER + ADMIN)
+// LOGOUT
 // =======================
 function logout(){
-    localStorage.removeItem("currentUser");
-    alert("Logged out successfully");
-    window.location.href = "/login";
+    localStorage.clear();
+    window.location.href="/";
 }
 
+//
+// =======================
+// CHECK AVAILABILITY
+// =======================
+async function checkAvailability(){
+
+    let data = await apiRequest(`${API}/checkavailability`,"POST",{
+        date:document.getElementById("date").value,
+        time:document.getElementById("time").value,
+        people:document.getElementById("people").value
+    });
+
+    let msg = document.getElementById("msg");
+
+    if(data.available){
+
+        availabilityOK = true;
+
+        let tableList = data.tables.map(t => t.id).join(", ");
+
+        msg.innerText = `${data.message} | Tables: ${tableList}`;
+        msg.style.color = "green";
+
+    } else {
+
+        availabilityOK = false;
+
+        msg.innerText = data.message || "No tables available";
+        msg.style.color = "red";
+    }
+}
+
+//
 // =======================
 // BOOK TABLE
 // =======================
 async function bookTable(){
+
+    if(!availabilityOK){
+        alert("Check availability first");
+        return;
+    }
+
     let user = JSON.parse(localStorage.getItem("currentUser"));
 
     if(!user){
@@ -64,144 +127,250 @@ async function bookTable(){
         return;
     }
 
-    let date = document.getElementById("date").value;
-    let time = document.getElementById("time").value;
-    let people = document.getElementById("people").value;
-
-    let data = await apiRequest(`${API}/book`, "POST", {
-        name: user.name,
-        date,
-        time,
-        people
+    let data = await apiRequest(`${API}/book`,"POST",{
+        name:user.name,
+        date:document.getElementById("date").value,
+        time:document.getElementById("time").value,
+        people:document.getElementById("people").value
     });
 
-    alert(data.msg);
-    if(data.msg === "Booking confirmed") window.location.href="/confirm";
-}
-
-// =======================
-// LOAD USER BOOKINGS
-// =======================
-async function loadMyBookings(){
-    let user = JSON.parse(localStorage.getItem("currentUser"));
-
-    if(!user){
-        window.location.href="/login";
-        return;
-    }
-
-    let data = await apiRequest(`${API}/mybookings/${user.name}`);
-    let table = document.getElementById("myTable");
-
-    let rows = `
-    <tr>
-    <th>Date</th>
-    <th>Time</th>
-    <th>People</th>
-    <th>Action</th>
-    </tr>`;
-
-    if(data.length === 0){
-        rows += `<tr><td colspan="4">No bookings</td></tr>`;
-    }
-
-    data.forEach(b => {
-        rows += `
-        <tr>
-        <td>${b.date}</td>
-        <td>${b.time}</td>
-        <td>${b.people}</td>
-        <td>
-            <button onclick="cancelBooking('${b.date}','${b.time}')">Cancel</button>
-        </td>
-        </tr>`;
-    });
-
-    table.innerHTML = rows;
-}
-
-// =======================
-// USER CANCEL
-// =======================
-async function cancelBooking(date, time){
-    let user = JSON.parse(localStorage.getItem("currentUser"));
-
-    let data = await apiRequest(`${API}/cancel`, "POST", {
-        name: user.name,
-        date,
-        time
-    });
-
-    alert(data.msg);
-    loadMyBookings();
-}
-
-// =======================
-// ADMIN LOGIN
-// =======================
-function adminLogin(){
-    let u = document.getElementById("adminUser").value;
-    let p = document.getElementById("adminPass").value;
-
-    if(u === "admin" && p === "123"){
-        localStorage.setItem("admin", "true");
-        window.location.href="/admin/dashboard";
+    if(data.msg === "Booking confirmed"){
+        localStorage.setItem("bookingInfo", JSON.stringify(data));
+        window.location.href="/confirm";
     } else {
-        alert("Invalid Admin");
+        alert(data.msg);
     }
 }
 
+//
+// =======================
+// CANCEL BOOKING
+// =======================
+async function cancelBooking(id){
+
+    if(!confirm("Cancel this booking?")) return;
+
+    let res = await fetch(`${API}/cancel/${id}`, {
+        method: "DELETE"
+    });
+
+    let data = await res.json();
+
+    alert(data.msg);
+
+    loadMyBookings();
+    loadAllBookings();
+}
+
+//
 // =======================
 // LOAD ALL BOOKINGS (ADMIN)
 // =======================
 async function loadAllBookings(){
+
     let data = await apiRequest(`${API}/allbookings`);
+
     let table = document.getElementById("bookingTable");
+    if(!table) return;
 
     let rows = `
     <tr>
-    <th>Name</th>
-    <th>Date</th>
-    <th>Time</th>
-    <th>People</th>
-    <th>Action</th>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>People</th>
+        <th>Table</th>
+        <th>Action</th>
     </tr>`;
-
-    if(data.length === 0){
-        rows += `<tr><td colspan="5">No bookings</td></tr>`;
-    }
 
     data.forEach(b => {
         rows += `
         <tr>
-        <td>${b.name}</td>
-        <td>${b.date}</td>
-        <td>${b.time}</td>
-        <td>${b.people}</td>
-        <td>
-            <button onclick="adminCancelBooking('${b.name}','${b.date}','${b.time}')">
-            Cancel
-            </button>
-        </td>
+            <td>${b.id}</td>
+            <td>${b.name}</td>
+            <td>${b.date}</td>
+            <td>${b.time}</td>
+            <td>${b.people}</td>
+            <td>${b.table_id}</td>
+            <td>
+                <button onclick="cancelBooking(${b.id})">Cancel</button>
+            </td>
         </tr>`;
     });
 
     table.innerHTML = rows;
 }
 
+//
 // =======================
-// ADMIN CANCEL
+// MY BOOKINGS (USER)
 // =======================
-async function adminCancelBooking(name, date, time){
-    let confirmCancel = confirm("Cancel this booking?");
-    if(!confirmCancel) return;
+async function loadMyBookings(){
 
-    let data = await apiRequest(`${API}/admin/cancel`, "POST", {
-        name,
-        date,
-        time
+    let user = JSON.parse(localStorage.getItem("currentUser"));
+    if(!user) return;
+
+    let data = await apiRequest(`${API}/mybookings/${user.name}`);
+
+    let table = document.getElementById("myTable");
+    if(!table) return;
+
+    let rows = `
+    <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>People</th>
+        <th>Table</th>
+        <th>Action</th>
+    </tr>`;
+
+    data.forEach(b => {
+        rows += `
+        <tr>
+            <td>${b.id}</td>
+            <td>${b.date}</td>
+            <td>${b.time}</td>
+            <td>${b.people}</td>
+            <td>${b.table_id}</td>
+            <td>
+                <button onclick="cancelBooking(${b.id})">Cancel</button>
+            </td>
+        </tr>`;
+    });
+
+    table.innerHTML = rows;
+}
+
+//
+// =======================
+// TABLES (ADMIN)
+// =======================
+async function loadTables(){
+
+    let data = await apiRequest(`${API}/tables`);
+
+    let table = document.getElementById("tableList");
+    if(!table) return;
+
+    let rows = `
+    <tr>
+        <th>ID</th>
+        <th>Seats</th>
+        <th>Action</th>
+    </tr>`;
+
+    data.forEach(t => {
+        rows += `
+        <tr>
+            <td>${t.id}</td>
+            <td>${t.seats}</td>
+            <td>
+                <button onclick="deleteTable('${t.id}')">Delete</button>
+            </td>
+        </tr>`;
+    });
+
+    table.innerHTML = rows;
+}
+
+//
+// =======================
+// ADD TABLE
+// =======================
+async function addTable(){
+
+    let data = await apiRequest(`${API}/tables/add`,"POST",{
+        id:document.getElementById("tableId").value,
+        seats:document.getElementById("seats").value
     });
 
     alert(data.msg);
-    loadAllBookings();
+    loadTables();
+}
+
+//
+// =======================
+// DELETE TABLE (NEW)
+// =======================
+async function deleteTable(id){
+
+    if(!confirm("Delete this table?")) return;
+
+    let res = await fetch(`${API}/tables/delete/${id}`, {
+        method: "DELETE"
+    });
+
+    let data = await res.json();
+
+    alert(data.msg);
+    loadTables();
+}
+
+//
+// =======================
+// LOAD SLOTS
+// =======================
+async function loadSlots(){
+
+    let data = await apiRequest(`${API}/slots`);
+
+    let table = document.getElementById("slotList");
+    if(!table) return;
+
+    let rows = `
+    <tr>
+        <th>ID</th>
+        <th>Start</th>
+        <th>End</th>
+        <th>Action</th>
+    </tr>`;
+
+    data.forEach(s => {
+        rows += `
+        <tr>
+            <td>${s.id}</td>
+            <td>${s.start}</td>
+            <td>${s.end}</td>
+            <td>
+                <button onclick="cancelSlot(${s.id})">Remove</button>
+            </td>
+        </tr>`;
+    });
+
+    table.innerHTML = rows;
+}
+
+//
+// =======================
+// ADD SLOT
+// =======================
+async function addSlot(){
+
+    let data = await apiRequest(`${API}/slots/add`,"POST",{
+        start:document.getElementById("startDate").value,
+        end:document.getElementById("endDate").value
+    });
+
+    alert(data.msg);
+    loadSlots();
+}
+
+//
+// =======================
+// DELETE SLOT
+// =======================
+async function cancelSlot(id){
+
+    if(!confirm("Remove this slot?")) return;
+
+    let res = await fetch(`${API}/slots/delete/${id}`, {
+        method: "DELETE"
+    });
+
+    let data = await res.json();
+
+    alert(data.msg);
+    loadSlots();
 }

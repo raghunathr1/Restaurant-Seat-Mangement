@@ -4,29 +4,37 @@
 <title>Home</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
 
 <header>
-<h1>Restaurant</h1>
-<nav>
-<a href="{{ url_for('home') }}">Home</a>
-<a href="{{ url_for('booking') }}">Book</a>
-<a href="{{ url_for('mybooking') }}">My Bookings</a>
-<a href="{{ url_for('login') }}">Login</a>
-<a href="{{ url_for('admin') }}">Admin</a>
-
-<!-- ✅ LOGOUT BUTTON -->
-<a href="#" onclick="logout()">Logout</a>
-</nav>
+    <h1>Restaurant</h1>
 </header>
 
 <div class="container">
-<h2>Welcome to Our Restaurant</h2>
-<p>Book your table easily online</p>
-<br>
-<a href="{{ url_for('booking') }}" class="btn">Book Now</a>
+
+    <h2>Welcome to Our Restaurant</h2>
+    <p>Manage your bookings easily</p>
+
+    <div class="card-grid">
+
+        <div class="card" onclick="go('/booking')">
+            <h3>Book Table</h3>
+        </div>
+
+        <div class="card" onclick="go('/mybooking')">
+            <h3>My Bookings</h3>
+        </div>
+
+        <div class="card" onclick="logout()">
+            <h3>Logout</h3>
+        </div>
+
+    </div>
+
 </div>
 
 <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
 </body>
 </html>

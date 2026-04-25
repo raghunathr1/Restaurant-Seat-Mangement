@@ -8,25 +8,14 @@
 <body onload="loadMyBookings()">
 
 <header>
-<h1>Restaurant</h1>
-<nav>
-<a href="{{ url_for('home') }}">Home</a>
-<a href="{{ url_for('booking') }}">Book</a>
-<a href="{{ url_for('login') }}">Login</a>
-</nav>
+<h1>My Bookings</h1>
 </header>
 
 <div class="container">
-<h2>My Bookings</h2>
 
-<table id="myTable" border="1" cellpadding="10">
-<tr>
-<th>Date</th>
-<th>Time</th>
-<th>People</th>
-<th>Action</th>
-</tr>
-</table>
+<h2>Your Bookings</h2>
+
+<table id="myTable" border="1" cellpadding="10"></table>
 
 </div>
 

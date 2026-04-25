@@ -4,31 +4,50 @@
 <title>Tables</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body onload="loadTables()">
 
 <header>
 <h1>Admin Panel</h1>
+
 <nav>
 <a href="{{ url_for('admin_dashboard') }}">Dashboard</a>
 <a href="{{ url_for('admin_tables') }}">Tables</a>
+<a href="{{ url_for('admin_bookings') }}">Bookings</a>
 </nav>
+
 </header>
 
 <div class="container">
+
 <h2>Manage Tables</h2>
 
+<!-- 🔥 INPUT SECTION -->
+<div style="margin-bottom:20px;">
+
+<input type="text" id="tableId" placeholder="Table ID (e.g. T11)">
 <input type="number" id="seats" placeholder="Seats">
+
 <button class="btn" onclick="addTable()">Add Table</button>
 
-<table id="tableList">
+</div>
+
+<!-- 🔥 MESSAGE -->
+<p id="msg"></p>
+
+<!-- 🔥 TABLE LIST -->
+<table id="tableList" border="1" cellpadding="10">
+
 <tr>
 <th>Table ID</th>
 <th>Seats</th>
 </tr>
+
 </table>
 
 </div>
 
 <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
 </body>
 </html>

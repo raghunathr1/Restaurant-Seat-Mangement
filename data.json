@@ -1,23 +1,58 @@
 {
     "users": [
         {
-            "name": "raghunath",
-            "email": "RAGHU@GMAIL.COM",
+            "name": "raghu",
+            "email": "raghu",
             "password": "123"
         }
     ],
     "bookings": [
         {
-            "name": "raghunath",
-            "date": "2026-03-31",
-            "time": "14:33",
-            "people": "2"
+            "id": 1,
+            "name": "raghu",
+            "date": "2026-04-01",
+            "time": "17:32",
+            "people": 2,
+            "table_id": "T2"
+        }
+    ],
+    "tables": [
+        {
+            "id": "T2",
+            "seats": 6
         },
         {
-            "name": "raghunath",
-            "date": "2026-03-31",
-            "time": "14:33",
-            "people": "2"
+            "id": "T3",
+            "seats": 6
+        },
+        {
+            "id": "T4",
+            "seats": 4
+        },
+        {
+            "id": "T5",
+            "seats": 4
+        },
+        {
+            "id": "T6",
+            "seats": 4
+        },
+        {
+            "id": "T7",
+            "seats": 2
+        },
+        {
+            "id": "T8",
+            "seats": 2
+        },
+        {
+            "id": "T9",
+            "seats": 1
+        },
+        {
+            "id": "T10",
+            "seats": 1
         }
-    ]
+    ],
+    "slots": []
 }

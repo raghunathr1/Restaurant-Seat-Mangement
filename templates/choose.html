@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Choose Login</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<header>
+    <h1>Restaurant System</h1>
+</header>
+
+<div class="container">
+
+    <h2>Select Login Type</h2>
+    <p>Please choose how you want to continue</p>
+
+    <!-- ✅ VERTICAL CARDS -->
+    <div class="card-grid choose-grid">
+
+        <div class="card" onclick="go('/login')">
+            <h3>👤 User Login</h3>
+        </div>
+
+        <div class="card" onclick="go('/signup')">
+            <h3>📝 Signup</h3>
+        </div>
+
+        <div class="card" onclick="go('/admin')">
+            <h3>🔐 Admin Login</h3>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+</html>
